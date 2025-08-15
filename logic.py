@@ -394,8 +394,8 @@ def create_agent_chain(vector_store, google_api_key: str, df_summary=None):
     retriever = vector_store.as_retriever(
         search_type="mmr",  # Maximum Marginal Relevance for diverse results
         search_kwargs={
-            "k": 25,  # Increased from 10 to 25 for more comprehensive results
-            "fetch_k": 50,  # Increased from 25 to 50 for broader initial search
+            "k": 20,  # Increased from 10 to 25 for more comprehensive results
+            "fetch_k": 40,  # Increased from 25 to 50 for broader initial search
             "lambda_mult": 0.5  # Adjusted for better diversity vs relevance balance
         }
     )

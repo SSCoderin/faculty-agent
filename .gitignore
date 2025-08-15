@@ -2,3 +2,6 @@
 venv/
 .streamlit/
 __pycache__/
+.latest_research_papers.xlsx
+.faculty_data_with_interests.xlsx
+.user_questions_log.txt

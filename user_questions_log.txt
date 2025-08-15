@@ -1,9 +1,7 @@
-streamlit
-langchain
-langchain-google-genai
-langchain-community
-pandas
-chromadb
-nest_asyncio
-openpyxl
-python-dotenv
+python-dotenv[2025-08-07 10:31:47] name  the faculty from computer scaience
+[2025-08-15 09:50:03] I want to approach some faculty to guide my group for the following projects -
+   1.  The Impact of Digital Feedback Loops on Self-Esteem and Motivation
+    – How do algorithmically-curated feedback systems (likes, views, comments) on social media affect self-esteem and intrinsic motivation?
+2. Neurodivergence and Representation
+3. Mental Health Interventions and Awareness in Schools
+Who do you think are the best people at FLAME to guide me on this? Please list some papers which align with these topics.

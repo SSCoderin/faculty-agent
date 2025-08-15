@@ -32,7 +32,7 @@ def log_question_to_file(question):
 @st.cache_resource(show_spinner="Loading and processing faculty data...")
 def cached_load_vector_store(api_key):
     """Caches the vector store to avoid reloading on every rerun."""
-    vector_store, error, df_summary = load_and_create_vector_store("faculty_data_with_interests.xlsx", "research_papers.xlsx", api_key)
+    vector_store, error, df_summary = load_and_create_vector_store("faculty_data_with_interests.xlsx", "latest_research_papers.xlsx", api_key)
     if error:
         st.error(error)
         st.stop()
