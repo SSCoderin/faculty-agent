@@ -1,0 +1,7 @@
+# Environment & configs
+.env
+venv/
+.streamlit/
+__pycache__/
+
+# *.xlsx
