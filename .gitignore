@@ -4,4 +4,4 @@ venv/
 .streamlit/
 __pycache__/
 
-# *.xlsx
+*.xlsx
