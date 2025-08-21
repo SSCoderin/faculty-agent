@@ -177,7 +177,7 @@ if prompt := st.chat_input("Ask about faculty, research, or publications..."):
         unsafe_allow_html=True
     )
 
-    with st.spinner("🔍 thinking..."):
+    with st.spinner("Thinking..."):
         try:
             response = search_agent.search(prompt)
             answer = response.get("answer", "Sorry, I couldn't find an answer.")
