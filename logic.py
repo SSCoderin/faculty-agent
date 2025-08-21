@@ -81,7 +81,7 @@ def create_faculty_search_agent(vector_store, google_api_key: str, summary_stats
         model="gemini-1.5-flash", 
         google_api_key=google_api_key, 
         temperature=0.1,
-        max_output_tokens=5216
+        max_output_tokens=3000
     )
 
     # Create summary text from statistics
@@ -145,9 +145,9 @@ def create_faculty_search_agent(vector_store, google_api_key: str, summary_stats
     retriever = vector_store.as_retriever(
         search_type="mmr",
         search_kwargs={
-            "k": 80,
-            "fetch_k": 160,
-            "lambda_mult": 0.3
+            "k": 20,
+            "fetch_k": 40,
+            "lambda_mult": 0.5
         }
     )
     
