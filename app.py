@@ -63,8 +63,6 @@
 # @st.cache_resource(show_spinner="Loading faculty data...")
 # def cached_load_vector_store(api_key: str):
 #     vector_store, error, df_faculty, df_papers, summary_stats = load_and_create_vector_store(
-#         "faculty_data_with_interests.xlsx", 
-#         "latest_research_papers.xlsx", 
 #         api_key
 #     )
 #     if error:
@@ -148,11 +146,16 @@
 #     st.session_state.messages.append({"role": "assistant", "content": answer})
 
 
+
+
+
 import streamlit as st
 import os
 from datetime import datetime
 import nest_asyncio
 from logic import load_and_create_vector_store, create_agent_chain
+from pymongo import MongoClient
+import urllib.parse
 
 nest_asyncio.apply()
 
@@ -200,15 +203,37 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 google_api_key = st.secrets.get("GOOGLE_API_KEY")
+mongo_url = st.secrets.get("MONGO_URL")
 
-def log_question_to_file(question: str):
+def init_mongo_client(mongo_url):
     try:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_entry = f"[{timestamp}] {question}\n"
-        with open("user_questions_log.txt", "a", encoding="utf-8") as f:
-            f.write(log_entry)
+        parsed_url = urllib.parse.urlparse(mongo_url)
+        if not parsed_url.scheme or not parsed_url.hostname:
+            st.error("Invalid MongoDB connection URL. Please check your `MONGO_URL` secret.")
+            return None
+        client = MongoClient(mongo_url)
+        return client
     except Exception as e:
-        print(f"Logging error: {e}")
+        st.error(f"Failed to connect to MongoDB: {e}")
+        return None
+
+def log_question_to_db(question: str):
+    client = init_mongo_client(mongo_url)
+    if client:
+        try:
+            db = client.get_database("flame_faculty_agent_db")
+            logs_collection = db.get_collection("user_questions")
+            log_entry = {
+                "timestamp": datetime.now(),
+                "question": question
+            }
+            logs_collection.insert_one(log_entry)
+            print("Question logged to MongoDB successfully.")
+        except Exception as e:
+            st.error(f"Logging to MongoDB failed: {e}")
+        finally:
+            if client:
+                client.close()
 
 @st.cache_resource(show_spinner="Loading faculty data...")
 def cached_load_vector_store(api_key: str):
@@ -228,12 +253,9 @@ st.title("FLAME Faculty Agent")
 
 with st.sidebar:
     st.header("📖 How to Use")
-
     instructions = [
         "Ask about faculty research, publications, or expertise",
-
     ]
-
     for step in instructions:
         st.markdown(
             f"""
@@ -248,6 +270,9 @@ with st.sidebar:
 
 if not google_api_key:
     st.error("⚠️ GOOGLE_API_KEY not found in Streamlit secrets.")
+    st.stop()
+if not mongo_url:
+    st.error("⚠️ MONGO_URL not found in Streamlit secrets.")
     st.stop()
 
 try:
@@ -274,7 +299,8 @@ for message in st.session_state.messages:
         )
 
 if prompt := st.chat_input("Ask your question..."):
-    log_question_to_file(prompt)
+    # Log the user question to MongoDB
+    log_question_to_db(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.markdown(
         f"<div class='chat-message'><div class='chat-icon'>👤</div><div class='chat-user-text'>{prompt}</div></div>",

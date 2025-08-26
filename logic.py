@@ -1,4 +1,5 @@
 import pandas as pd
+from langchain_openai import ChatOpenAI
 from langchain_google_genai import GoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains.retrieval import create_retrieval_chain
@@ -42,17 +43,14 @@ def load_processed_data(vector_store_dir: str):
     try:
         metadata_dir = os.path.join(vector_store_dir, "metadata")
         
-        # Load faculty data
         with open(os.path.join(metadata_dir, "faculty_data.json"), 'r', encoding='utf-8') as f:
             faculty_data = json.load(f)
         df_faculty = pd.DataFrame(faculty_data)
         
-        # Load paper data
         with open(os.path.join(metadata_dir, "paper_data.json"), 'r', encoding='utf-8') as f:
             paper_data = json.load(f)
         df_papers = pd.DataFrame(paper_data)
         
-        # Load summary stats
         with open(os.path.join(metadata_dir, "summary_stats.json"), 'r', encoding='utf-8') as f:
             summary_stats = json.load(f)
         
