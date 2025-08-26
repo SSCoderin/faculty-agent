@@ -1,5 +1,4 @@
 import pandas as pd
-from langchain_openai import ChatOpenAI
 from langchain_google_genai import GoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains.retrieval import create_retrieval_chain
