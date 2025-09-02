@@ -5,3 +5,4 @@ venv/
 __pycache__/
 
 *.xlsx
+create_vectore_store
